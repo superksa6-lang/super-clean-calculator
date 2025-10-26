@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة أسعار تنظيف الشقق - سوبر كلين</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .calculator-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+        }
+
+        .company-header {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 15px 25px;
+            text-align: center;
+            border-bottom: 3px solid #fff;
+        }
+
+        .company-header h2 {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .company-header .tagline {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        .calculator-header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .calculator-header h1 {
+            font-size: 1.6em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .calculator-header p {
+            opacity: 0.9;
+            font-size: 0.95em;
+        }
+
+        .calculator-body {
+            padding: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.95em;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .range-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .range-container input {
+            flex: 1;
+        }
+
+        .range-value {
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1 1 45%;
+        }
+
+        .checkbox-item input {
+            width: auto;
+            transform: scale(1.1);
+        }
+
+        .calculate-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px rgba(231, 76, 60, 0.3);
+        }
+
+        .result-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 2px dashed #e74c3c;
+            display: none;
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .result-header h3 {
+            color: #2c3e50;
+            font-size: 1.3em;
+        }
+
+        .price-display {
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .final-price {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #27ae60;
+            margin: 8px 0;
+        }
+
+        .price-breakdown {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9em;
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1em;
+        }
+
+        .discount-badge {
+            background: #27ae60;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .disclaimer {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.85em;
+            color: #7f8c8d;
+            line-height: 1.4;
+        }
+
+        .company-benefits {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            border-right: 4px solid #e74c3c;
+        }
+
+        .benefits-title {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .benefits-list {
+            list-style: none;
+            font-size: 0.85em;
+        }
+
+        .benefits-list li {
+            padding: 5px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .benefits-list li:before {
+            content: "✓";
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        @media (max-width: 480px) {
+            .calculator-header {
+                padding: 20px 15px;
+            }
+            
+            .calculator-body {
+                padding: 20px 15px;
+            }
+            
+            .checkbox-item {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <div class="company-header">
+            <h2>سوبر كلين</h2>
+            <div class="tagline">التميز في نظافة منزلك</div>
+        </div>
+
+        <div class="calculator-header">
+            <h1>🧼 حاسبة أسعار تنظيف الشقق</h1>
+            <p>احسب تكلفة تنظيف شقتك في دقائق معدودة</p>
+        </div>
+        
+        <div class="calculator-body">
+            <div class="form-group">
+                <label for="area">مساحة الشقة (م²)</label>
+                <div class="range-container">
+                    <input type="range" id="area" min="50" max="300" value="120" step="10">
+                    <span class="range-value" id="areaValue">120 م²</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="rooms">عدد الغرف</label>
+                <select id="rooms">
+                    <option value="1">استوديو</option>
+                    <option value="2">غرفتين</option>
+                    <option value="3" selected>3 غرف</option>
+                    <option value="4">4 غرف</option>
+                    <option value="5">5 غرف</option>
+                    <option value="6">6 غرف وأكثر</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="cleaningType">نوع التنظيف</label>
+                <select id="cleaningType">
+                    <option value="normal">تنظيف عادي</option>
+                    <option value="deep">تنظيف عميق</option>
+                    <option value="move">تنظيف قبل/بعد السكن</option>
+                    <option value="construction">تنظيف ما بعد البناء</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>خدمات إضافية</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="windows" value="50">
+                        <label for="windows">تنظيف النوافذ</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="carpet" value="80">
+                        <label for="carpet">غسيل السجاد</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="furniture" value="60">
+                        <label for="furniture">تنظيف الأثاث</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="disinfection" value="40">
+                        <label for="disinfection">تعقيم إضافي</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="frequency">باقات سوبر كلين المميزة</label>
+                <select id="frequency">
+                    <option value="1">مرة واحدة (بدون خصم)</option>
+                    <option value="2">مرتين في الشهر (خصم 5%)</option>
+                    <option value="8">ربع سنوي - 8 مرات (خصم 15%)</option>
+                </select>
+            </div>
+            
+            <button class="calculate-btn" onclick="calculatePrice()">
+                🧮 احسب السعر النهائي
+            </button>
+            
+            <div class="company-benefits">
+                <div class="benefits-title">لماذا تختار سوبر كلين؟</div>
+                <ul class="benefits-list">
+                    <li>فرق تنظيف مدربة ومحترفة</li>
+                    <li>استخدام أفضل مواد التنظيف الآمنة</li>
+                    <li>ضمان الجودة 100%</li>
+                    <li>أسعار تنافسية وعروض مميزة</li>
+                    <li>خدمة عملاء متاحة 24/7</li>
+                </ul>
+            </div>
+            
+            <div class="result-container" id="resultContainer">
+                <div class="result-header">
+                    <h3>التكلفة المتوقعة مع سوبر كلين</h3>
+                </div>
+                
+                <div class="price-display">
+                    <div class="final-price" id="finalPrice">0 ريال</div>
+                    <p>شامل الضريبة ومواد التنظيف</p>
+                </div>
+                
+                <div class="price-breakdown">
+                    <div class="breakdown-item">
+                        <span>السعر الأساسي للزيارة:</span>
+                        <span id="basePrice">0 ريال</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span>الخدمات الإضافية:</span>
+                        <span id="extraServices">0 ريال</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span>عدد الزيارات:</span>
+                        <span id="visitsCount">0 زيارة</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span>السعر قبل الخصم:</span>
+                        <span id="beforeDiscount">0 ريال</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span>الخصم:</span>
+                        <span id="discountAmount">0 ريال</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span>الإجمالي النهائي:</span>
+                        <span id="totalPrice">0 ريال</span>
+                    </div>
+                </div>
+                
+                <div class="disclaimer">
+                    * هذا سعر تقديري وقد يختلف حسب الحالة الفعلية للشقة<br>
+                    ** الأسعار شاملة ضريبة القيمة المضافة ومواد التنظيف
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // تحديث قيمة المساحة عند تحريك السلايدر
+        document.getElementById('area').addEventListener('input', function() {
+            document.getElementById('areaValue').textContent = this.value + ' م²';
+        });
+
+        function calculatePrice() {
+            // جمع البيانات من النموذج
+            const area = parseInt(document.getElementById('area').value);
+            const rooms = parseInt(document.getElementById('rooms').value);
+            const cleaningType = document.getElementById('cleaningType').value;
+            const frequency = parseInt(document.getElementById('frequency').value);
+            
+            // حساب السعر الأساسي بناء على المساحة والغرف
+            let basePrice;
+            
+            // الأسعار الأساسية
+            const roomPrices = {
+                1: 250,  // استوديو
+                2: 350,  // غرفتين
+                3: 650,  // 3 غرف
+                4: 750,  // 4 غرف
+                5: 850,  // 5 غرف
+                6: 900   // 6 غرف وأكثر
+            };
+            
+            basePrice = roomPrices[rooms];
+            
+            // إضافة تكلفة إضافية للمساحة الكبيرة (فوق 150م)
+            if (area > 150) {
+                basePrice += Math.floor((area - 150) / 10) * 10;
+            }
+            
+            // تعديل السعر حسب نوع التنظيف
+            const cleaningMultipliers = {
+                'normal': 1,
+                'deep': 1.2,
+                'move': 1.4,
+                'construction': 1.6
+            };
+            basePrice *= cleaningMultipliers[cleaningType];
+            
+            // حساب الخدمات الإضافية
+            let extraServicesCost = 0;
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            checkboxes.forEach(checkbox => {
+                extraServicesCost += parseInt(checkbox.value);
+            });
+            
+            // حساب الخصم حسب الباقة المختارة
+            const discountRates = {
+                1: 0,   // مرة واحدة - بدون خصم
+                2: 0.05, // مرتين في الشهر - خصم 5%
+                8: 0.15  // ربع سنوي - خصم 15%
+            };
+            
+            const discountRate = discountRates[frequency];
+            
+            // حساب الأسعار
+            const pricePerVisit = basePrice + extraServicesCost;
+            const totalBeforeDiscount = pricePerVisit * frequency;
+            const discountAmount = totalBeforeDiscount * discountRate;
+            const finalPrice = totalBeforeDiscount - discountAmount;
+            
+            // عرض النتائج
+            document.getElementById('basePrice').textContent = Math.round(pricePerVisit) + ' ريال';
+            document.getElementById('extraServices').textContent = extraServicesCost + ' ريال';
+            document.getElementById('visitsCount').textContent = frequency + ' زيارة';
+            document.getElementById('beforeDiscount').textContent = Math.round(totalBeforeDiscount) + ' ريال';
+            document.getElementById('discountAmount').textContent = Math.round(discountAmount) + ' ريال ' + 
+                (discountRate > 0 ? `<span class="discount-badge">${discountRate * 100}%</span>` : '');
+            document.getElementById('totalPrice').textContent = Math.round(finalPrice) + ' ريال';
+            document.getElementById('finalPrice').textContent = Math.round(finalPrice) + ' ريال';
+            
+            // إظهار حاوية النتائج
+            document.getElementById('resultContainer').style.display = 'block';
+            
+            // Scroll to results
+            document.getElementById('resultContainer').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+
+        // حساب أولي عند تحميل الصفحة
+        window.addEventListener('load', function() {
+            calculatePrice();
+        });
+    </script>
+</body>
+</html>
